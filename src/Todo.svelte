@@ -1,9 +1,15 @@
 <script lang='ts'>
-  import { todos } from "./store";
+  import { todos,saveStorage,getStorage } from "./store";
 
+
+  
   $: document.title = `${$todos.filter(({done}) => done).length}/${$todos.length}`
 
-  const handleRemove = (index) => todos.update(prev => prev.filter((_, i) => i !== index))
+
+  const handleRemove = (index) => {
+    saveStorage($todos)
+    todos.update(prev => prev.filter((_, i) => i !== index))
+  }
   const handleAdd = (e) => {
     if (e.key !== 'Enter') return
     const text = e.target.value
@@ -13,8 +19,17 @@
       text,
       done: false
     }])
+
+    saveStorage($todos)
   }
-  const handleClear = () => todos.set([])
+  const handleClear = () => {
+    todos.set([])
+    saveStorage($todos)
+  }
+
+  const handleChange = () => {
+    saveStorage($todos)
+  }
 </script>
 
 <style>
@@ -33,6 +48,7 @@
     flex-direction: column;
     gap: 1rem;
     overflow: scroll;
+    margin-bottom: auto;
   }
   .todo {
     display: flex;
@@ -47,7 +63,6 @@
 
   .todo.done {
     background: #4c946c;
-
   }
 
   .remove-button {
@@ -101,6 +116,16 @@
     position: relative;
   }
 
+  h1 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  h1 picture {
+    width: 3rem;
+  }
+
   img {width: 100%;}
 
   footer {
@@ -117,13 +142,14 @@
 </style>
 
 <main>
+  <h1><picture><img src="./svelte.svg" alt="svelte logo"/></picture>Svelte TODO App</h1>
   <div class="todos">
     {#if !$todos.length}
       Nothing to do! ✅ That's good, isn't it?
     {/if}
     {#each $todos as todo, index}
       <label class="todo {todo.done ? 'done' : ''}">
-        <input class="checkbox" type="checkbox" bind:checked={todo.done}>
+        <input class="checkbox" type="checkbox" bind:checked={todo.done} on:change={handleChange}>
         <span class="text">{todo.text}</span>
         <button class="remove-button" on:click={() => handleRemove(index)}>🗑</button>
       </label> 
