@@ -1,7 +1,7 @@
 <script lang='ts'>
   import { todos,saveStorage,getStorage } from "./store";
 
-
+  let input
   
   $: document.title = `${$todos.filter(({done}) => done).length}/${$todos.length}`
 
@@ -28,6 +28,19 @@
   }
 
   const handleChange = () => {
+    saveStorage($todos)
+  }
+
+  const handleSend = () => {
+    // if (input.key !== 'Enter') return
+    const text = input.value
+    if (!text.trim()) return
+    input.value = ''
+    todos.update(prev => [...prev, {
+      text,
+      done: false
+    }])
+
     saveStorage($todos)
   }
 </script>
@@ -94,7 +107,7 @@
     flex: 1;
   }
 
-  .clear {
+  .clear, .send {
     background: none;
     border: none;
     background-color: #3c9198;
@@ -139,6 +152,24 @@
   footer:hover {
     filter: drop-shadow(0 0 5px white)
   }
+
+  .send {
+    display: none;
+  }
+
+  @media only screen and (max-width: 600px) {
+    footer {
+      position: relative;
+    }
+
+    .send {
+      display: block;
+    }
+
+    .clear {
+      display: none;
+    }
+  }
 </style>
 
 <main>
@@ -158,8 +189,9 @@
   </div>
 
   <div class="bottom">
-    <input class="input" type="text" placeholder="Add todo" on:keydown={handleAdd}>
+    <input class="input" bind:this={input} type="text" placeholder="Add todo" on:keydown={handleAdd}>
     <button class="clear" on:click={handleClear}>Clear</button>
+    <button class="send" on:click={handleSend}>Add</button>
   </div>
 
 </main>
