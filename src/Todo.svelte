@@ -94,6 +94,26 @@
   button, .checkbox {
     cursor: pointer;
   }
+
+  picture {
+    width: 10px;
+    aspect-ratio: 1/1;
+    position: relative;
+  }
+
+  img {width: 100%;}
+
+  footer {
+    position: absolute;
+    width: 5rem;
+    bottom:0;
+    right: 0;
+    transition: all .4s ease;
+  }
+
+  footer:hover {
+    filter: drop-shadow(0 0 5px white)
+  }
 </style>
 
 <main>
@@ -115,4 +135,12 @@
     <input class="input" type="text" placeholder="Add todo" on:keydown={handleAdd}>
     <button class="clear" on:click={handleClear}>Clear</button>
   </div>
+
 </main>
+<footer>
+  <a href="https://github.com/LeFede/svelte-todo" target="_blank" rel="noreferrer">
+    <picture>
+      <img src="./github.svg" alt="github">
+    </picture>
+  </a>
+</footer>
