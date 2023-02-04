@@ -7,8 +7,8 @@
 
 
   const handleRemove = (index) => {
-    saveStorage($todos)
     todos.update(prev => prev.filter((_, i) => i !== index))
+    saveStorage($todos)
   }
   const handleAdd = (e) => {
     if (e.key !== 'Enter') return
